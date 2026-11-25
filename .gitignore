@@ -1,0 +1,81 @@
+
+# ==============================
+# Python
+# ==============================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# ==============================
+# Virtual Environment
+# ==============================
+.venv/
+venv/
+env/
+ENV/
+
+# ==============================
+# Jupyter Notebook
+# ==============================
+.ipynb_checkpoints/
+.ipython/
+
+# ==============================
+# IDE & Editor
+# ==============================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ==============================
+# Environment & Secrets
+# ==============================
+.env
+.env.*
+!.env.example
+
+# ==============================
+# Logs
+# ==============================
+*.log
+logs/
+
+# ==============================
+# Dataset
+# ==============================
+data/raw/*
+!data/raw/.gitkeep
+
+# ==============================
+# Generated Processed Data
+# ==============================
+data/processed/*
+!data/processed/.gitkeep
+
+# ==============================
+# Model Artifacts
+# ==============================
+models/*
+!models/.gitkeep
+*.keras
+*.h5
+*.pb
+saved_model/
+
+# ==============================
+# Training Outputs
+# ==============================
+outputs/
+checkpoints/
+tensorboard/
+runs/
+
+# ==============================
+# OS
+# ==============================
+.DS_Store
+Thumbs.db
+desktop.ini

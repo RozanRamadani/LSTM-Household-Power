@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "data-analysis": {
+      "source": "ihkreddy/agent-skills",
+      "sourceType": "github",
+      "skillPath": "data-analysis/SKILL.md",
+      "computedHash": "217be7ccccafbfb53aadeabfd429e7a55107b36d73a66d4eee17a0a0deead0d5"
+    },
+    "scikit-learn": {
+      "source": "tondevrel/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/scikit-learn/SKILL.md",
+      "computedHash": "d1e5642461c82827d2dc11e2791bf741590e54d13c63656d3fa0bc06767fd204"
+    }
+  }
+}
