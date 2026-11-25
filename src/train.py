@@ -89,8 +89,17 @@ def get_process_memory_mb() -> dict[str, float | None]:
     try:
         counters = _ProcessMemoryCounters()
         counters.cb = ctypes.sizeof(counters)
-        handle = ctypes.windll.kernel32.GetCurrentProcess()
-        ok = ctypes.windll.psapi.GetProcessMemoryInfo(handle, ctypes.byref(counters), counters.cb)
+        kernel32 = ctypes.windll.kernel32
+        psapi = ctypes.windll.psapi
+        kernel32.GetCurrentProcess.restype = ctypes.c_void_p
+        psapi.GetProcessMemoryInfo.argtypes = [
+            ctypes.c_void_p,
+            ctypes.c_void_p,
+            ctypes.c_uint32,
+        ]
+        psapi.GetProcessMemoryInfo.restype = ctypes.c_int
+        handle = kernel32.GetCurrentProcess()
+        ok = psapi.GetProcessMemoryInfo(handle, ctypes.byref(counters), counters.cb)
         if ok:
             return {
                 "rss_mb": round(counters.WorkingSetSize / (1024 ** 2), 2),
@@ -446,8 +455,18 @@ def generate_evaluation_figures(
     plt.close(fig)
     saved.append(str(p12.relative_to(PROJECT_ROOT)).replace("\\", "/"))
 
-    # 13. Model Comparison Metrics (Validation & Test)
-    fig, axes = plt.subplots(1, 3, figsize=(16, 5))
+    saved.append(plot_model_comparison_metrics(all_metrics))
+
+    return saved
+
+
+def plot_model_comparison_metrics(
+    all_metrics: dict[str, dict[str, dict[str, float]]],
+) -> str:
+    """Plot Validation and Test metric comparison bars with clean positive/negative label offsets."""
+    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+    sns.set_style("whitegrid")
+    fig, axes = plt.subplots(1, 3, figsize=(16, 5.2))
     models_order = ["persistence", "seasonal_naive_24h", "stacked_lstm"]
     model_labels = ["Persistence\n(t-1h)", "Seasonal Naive\n(t-24h)", "Stacked LSTM\n(60h->1h)"]
     x_idx = np.arange(len(models_order))
@@ -467,20 +486,40 @@ def generate_evaluation_figures(
         ax.set_xticks(x_idx)
         ax.set_xticklabels(model_labels, fontsize=9)
         y_top = max(max(val_vals), max(test_vals))
-        ax.set_ylim(min(0.0, min(min(val_vals), min(test_vals)) - 0.05), y_top * 1.18)
+        y_bot = min(0.0, min(min(val_vals), min(test_vals)))
+        span = y_top - y_bot
+        ax.set_ylim(y_bot - (0.12 * span if y_bot < 0 else 0.0), y_top + 0.14 * span)
+        if y_bot < 0:
+            ax.axhline(0.0, color="#666666", linewidth=0.9, alpha=0.8)
         for bar in list(b1) + list(b2):
             h_val = bar.get_height()
-            ax.text(bar.get_x() + bar.get_width() / 2, h_val + y_top * 0.02, f"{h_val:.4f}",
-                    ha="center", va="bottom", fontsize=7.8, fontweight="bold")
+            if h_val >= 0:
+                ax.text(
+                    bar.get_x() + bar.get_width() / 2,
+                    h_val + 0.015 * span,
+                    f"{h_val:.4f}",
+                    ha="center",
+                    va="bottom",
+                    fontsize=7.8,
+                    fontweight="bold",
+                )
+            else:
+                ax.text(
+                    bar.get_x() + bar.get_width() / 2,
+                    h_val - 0.015 * span,
+                    f"{h_val:.4f}",
+                    ha="center",
+                    va="top",
+                    fontsize=7.8,
+                    fontweight="bold",
+                )
         ax.legend(fontsize=8.5)
 
     fig.tight_layout()
     p13 = FIGURES_DIR / "13_model_comparison_metrics.png"
     fig.savefig(p13, dpi=300, bbox_inches="tight")
     plt.close(fig)
-    saved.append(str(p13.relative_to(PROJECT_ROOT)).replace("\\", "/"))
-
-    return saved
+    return str(p13.relative_to(PROJECT_ROOT)).replace("\\", "/")
 
 
 def main() -> None:
