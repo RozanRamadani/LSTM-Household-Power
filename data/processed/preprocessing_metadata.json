@@ -1,0 +1,553 @@
+{
+  "task_definition": {
+    "target": "Global_active_power",
+    "target_meaning": "Konsumsi daya aktif rata-rata rumah tangga (kW) pada 1 jam berikutnya (mean Global_active_power pada interval [t+1h, t+2h)), bukan menit berikutnya.",
+    "resolution": "1h",
+    "lookback_hours": 60,
+    "forecast_horizon_hours": 1
+  },
+  "feature_configuration": {
+    "all_features": [
+      "Global_active_power",
+      "Global_reactive_power",
+      "Voltage",
+      "Sub_metering_1",
+      "Sub_metering_2",
+      "Sub_metering_3",
+      "hour_sin",
+      "hour_cos",
+      "dow_sin",
+      "dow_cos",
+      "month_sin",
+      "month_cos",
+      "is_weekend"
+    ],
+    "num_features": 13,
+    "continuous_scaled_features": [
+      "Global_active_power",
+      "Global_reactive_power",
+      "Voltage",
+      "Sub_metering_1",
+      "Sub_metering_2",
+      "Sub_metering_3"
+    ],
+    "temporal_unscaled_features": [
+      "hour_sin",
+      "hour_cos",
+      "dow_sin",
+      "dow_cos",
+      "month_sin",
+      "month_cos",
+      "is_weekend"
+    ],
+    "excluded_raw_features": [
+      "Global_intensity"
+    ],
+    "exclusion_rationale": "Global_intensity dikecualikan karena multikolinearitas ekstrem dengan target Global_active_power (Pearson r = 0.9989, Spearman rho = 0.9954).",
+    "aggregation_rules": {
+      "Global_active_power": "mean per 1h (kW)",
+      "Global_reactive_power": "mean per 1h (kVAR/kW)",
+      "Voltage": "mean per 1h (V)",
+      "Sub_metering_1_to_3": "mean_per_min * 60 (Wh per 1h, unbiased untuk >=45/60 menit valid)",
+      "min_valid_minutes_per_hour": 45
+    }
+  },
+  "counts_before_and_after_aggregation": {
+    "raw_1min_total_rows": 2075259,
+    "raw_1min_valid_rows": 2049280,
+    "raw_1min_missing_rows": 25979,
+    "raw_1min_missing_pct": 1.2518,
+    "hourly_bins_pre_trim": 34589,
+    "hourly_valid_pre_trim": 34151,
+    "hourly_invalid_pre_trim": 438,
+    "trimmed_boundary_hours": {
+      "leading": 1,
+      "trailing": 1
+    },
+    "hourly_bins_post_trim": 34587,
+    "hourly_start": "2006-12-16 18:00:00",
+    "hourly_end": "2010-11-26 20:00:00",
+    "hourly_invalid_before_interp": 436,
+    "hourly_interpolated_total": 5,
+    "hourly_remaining_invalid_segment_breaks": 431,
+    "hourly_valid_after_preprocessing": 34156,
+    "long_raw_outages_gt_60min": [
+      {
+        "start": "2007-04-28 00:21:00",
+        "end": "2007-04-30 14:23:00",
+        "duration_minutes": 3723
+      },
+      {
+        "start": "2007-07-15 16:49:00",
+        "end": "2007-07-15 18:11:00",
+        "duration_minutes": 83
+      },
+      {
+        "start": "2008-12-10 10:48:00",
+        "end": "2008-12-10 11:57:00",
+        "duration_minutes": 70
+      },
+      {
+        "start": "2009-06-13 00:30:00",
+        "end": "2009-06-15 07:34:00",
+        "duration_minutes": 3305
+      },
+      {
+        "start": "2009-08-13 05:00:00",
+        "end": "2009-08-13 19:50:00",
+        "duration_minutes": 891
+      },
+      {
+        "start": "2010-01-12 14:53:00",
+        "end": "2010-01-14 19:01:00",
+        "duration_minutes": 3129
+      },
+      {
+        "start": "2010-03-20 03:52:00",
+        "end": "2010-03-21 13:38:00",
+        "duration_minutes": 2027
+      },
+      {
+        "start": "2010-08-17 21:02:00",
+        "end": "2010-08-22 21:27:00",
+        "duration_minutes": 7226
+      },
+      {
+        "start": "2010-09-25 03:56:00",
+        "end": "2010-09-28 19:12:00",
+        "duration_minutes": 5237
+      }
+    ]
+  },
+  "splits_and_interpolation": {
+    "train": {
+      "total_hours": 24210,
+      "missing_hours_before_interp": 142,
+      "interpolated_hours_count": 5,
+      "interpolated_timestamps": [
+        "2007-06-09 18:00:00",
+        "2007-08-01 08:00:00",
+        "2008-10-25 10:00:00",
+        "2009-02-01 16:00:00",
+        "2009-02-17 10:00:00"
+      ],
+      "missing_hours_after_interp": 137,
+      "valid_hours_after_interp": 24073,
+      "unimputed_gap_blocks": [
+        {
+          "start": "2007-04-28 00:00:00",
+          "end": "2007-04-30 14:00:00",
+          "hourly_length": 63,
+          "reason": "exceeds_hourly_max_gap"
+        },
+        {
+          "start": "2007-07-15 17:00:00",
+          "end": "2007-07-15 18:00:00",
+          "hourly_length": 2,
+          "reason": "exceeds_hourly_max_gap"
+        },
+        {
+          "start": "2008-12-10 11:00:00",
+          "end": "2008-12-10 11:00:00",
+          "hourly_length": 1,
+          "reason": "underlying_raw_outage_gt_60min"
+        },
+        {
+          "start": "2009-06-13 00:00:00",
+          "end": "2009-06-15 07:00:00",
+          "hourly_length": 56,
+          "reason": "exceeds_hourly_max_gap"
+        },
+        {
+          "start": "2009-08-13 05:00:00",
+          "end": "2009-08-13 19:00:00",
+          "hourly_length": 15,
+          "reason": "exceeds_hourly_max_gap"
+        }
+      ]
+    },
+    "val": {
+      "total_hours": 5188,
+      "missing_hours_before_interp": 86,
+      "interpolated_hours_count": 0,
+      "interpolated_timestamps": [],
+      "missing_hours_after_interp": 86,
+      "valid_hours_after_interp": 5102,
+      "unimputed_gap_blocks": [
+        {
+          "start": "2010-01-12 15:00:00",
+          "end": "2010-01-14 18:00:00",
+          "hourly_length": 52,
+          "reason": "exceeds_hourly_max_gap"
+        },
+        {
+          "start": "2010-03-20 04:00:00",
+          "end": "2010-03-21 13:00:00",
+          "hourly_length": 34,
+          "reason": "exceeds_hourly_max_gap"
+        }
+      ]
+    },
+    "test": {
+      "total_hours": 5189,
+      "missing_hours_before_interp": 208,
+      "interpolated_hours_count": 0,
+      "interpolated_timestamps": [],
+      "missing_hours_after_interp": 208,
+      "valid_hours_after_interp": 4981,
+      "unimputed_gap_blocks": [
+        {
+          "start": "2010-08-17 21:00:00",
+          "end": "2010-08-22 21:00:00",
+          "hourly_length": 121,
+          "reason": "exceeds_hourly_max_gap"
+        },
+        {
+          "start": "2010-09-25 04:00:00",
+          "end": "2010-09-28 18:00:00",
+          "hourly_length": 87,
+          "reason": "exceeds_hourly_max_gap"
+        }
+      ]
+    }
+  },
+  "scaler_summary": {
+    "scaler_type": "MinMaxScaler(feature_range=(0, 1))",
+    "fit_split": "train_only_valid_rows",
+    "n_samples_seen": 24073,
+    "continuous_features": [
+      "Global_active_power",
+      "Global_reactive_power",
+      "Voltage",
+      "Sub_metering_1",
+      "Sub_metering_2",
+      "Sub_metering_3"
+    ],
+    "data_min": [
+      0.124,
+      0.021033,
+      225.8345,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "data_max": [
+      6.560533,
+      0.774333,
+      251.902,
+      2902.0,
+      2786.0,
+      1227.0
+    ],
+    "target_data_min_kw": 0.124,
+    "target_data_max_kw": 6.560533
+  },
+  "sequence_summary": {
+    "train": {
+      "total_valid_segments": 6,
+      "used_segments": 6,
+      "skipped_short_segments_count": 0,
+      "skipped_short_segments": [],
+      "total_sequences": 23713,
+      "X_shape": [
+        23713,
+        60,
+        13
+      ],
+      "y_shape": [
+        23713,
+        1
+      ],
+      "segment_details": [
+        {
+          "segment_id": 0,
+          "length_hours": 3174,
+          "sequences": 3114,
+          "start": "2006-12-16 18:00:00",
+          "end": "2007-04-27 23:00:00"
+        },
+        {
+          "segment_id": 1,
+          "length_hours": 1826,
+          "sequences": 1766,
+          "start": "2007-04-30 15:00:00",
+          "end": "2007-07-15 16:00:00"
+        },
+        {
+          "segment_id": 2,
+          "length_hours": 12328,
+          "sequences": 12268,
+          "start": "2007-07-15 19:00:00",
+          "end": "2008-12-10 10:00:00"
+        },
+        {
+          "segment_id": 3,
+          "length_hours": 4428,
+          "sequences": 4368,
+          "start": "2008-12-10 12:00:00",
+          "end": "2009-06-12 23:00:00"
+        },
+        {
+          "segment_id": 4,
+          "length_hours": 1413,
+          "sequences": 1353,
+          "start": "2009-06-15 08:00:00",
+          "end": "2009-08-13 04:00:00"
+        },
+        {
+          "segment_id": 5,
+          "length_hours": 904,
+          "sequences": 844,
+          "start": "2009-08-13 20:00:00",
+          "end": "2009-09-20 11:00:00"
+        }
+      ]
+    },
+    "val": {
+      "total_valid_segments": 3,
+      "used_segments": 3,
+      "skipped_short_segments_count": 0,
+      "skipped_short_segments": [],
+      "total_sequences": 4922,
+      "X_shape": [
+        4922,
+        60,
+        13
+      ],
+      "y_shape": [
+        4922,
+        1
+      ],
+      "segment_details": [
+        {
+          "segment_id": 0,
+          "length_hours": 2739,
+          "sequences": 2679,
+          "start": "2009-09-20 12:00:00",
+          "end": "2010-01-12 14:00:00"
+        },
+        {
+          "segment_id": 1,
+          "length_hours": 1545,
+          "sequences": 1485,
+          "start": "2010-01-14 19:00:00",
+          "end": "2010-03-20 03:00:00"
+        },
+        {
+          "segment_id": 2,
+          "length_hours": 818,
+          "sequences": 758,
+          "start": "2010-03-21 14:00:00",
+          "end": "2010-04-24 15:00:00"
+        }
+      ]
+    },
+    "test": {
+      "total_valid_segments": 3,
+      "used_segments": 3,
+      "skipped_short_segments_count": 0,
+      "skipped_short_segments": [],
+      "total_sequences": 4801,
+      "X_shape": [
+        4801,
+        60,
+        13
+      ],
+      "y_shape": [
+        4801,
+        1
+      ],
+      "segment_details": [
+        {
+          "segment_id": 0,
+          "length_hours": 2765,
+          "sequences": 2705,
+          "start": "2010-04-24 16:00:00",
+          "end": "2010-08-17 20:00:00"
+        },
+        {
+          "segment_id": 1,
+          "length_hours": 798,
+          "sequences": 738,
+          "start": "2010-08-22 22:00:00",
+          "end": "2010-09-25 03:00:00"
+        },
+        {
+          "segment_id": 2,
+          "length_hours": 1418,
+          "sequences": 1358,
+          "start": "2010-09-28 19:00:00",
+          "end": "2010-11-26 20:00:00"
+        }
+      ]
+    }
+  },
+  "validation_checks": {
+    "no_gap_crossing": {
+      "passed": true,
+      "details": {
+        "train": {
+          "exact_60h_span_all": true,
+          "all_values_finite": true,
+          "same_valid_segment_all": true,
+          "sampled_all_61_hours_valid": true
+        },
+        "val": {
+          "exact_60h_span_all": true,
+          "all_values_finite": true,
+          "same_valid_segment_all": true,
+          "sampled_all_61_hours_valid": true
+        },
+        "test": {
+          "exact_60h_span_all": true,
+          "all_values_finite": true,
+          "same_valid_segment_all": true,
+          "sampled_all_61_hours_valid": true
+        }
+      }
+    },
+    "chronological_order": {
+      "passed": true,
+      "cross_split_strictly_ordered": true,
+      "details": {
+        "train": {
+          "strictly_increasing_target_ts": true,
+          "strictly_increasing_start_ts": true,
+          "first_window_start": "2006-12-16 18:00:00",
+          "last_target_ts": "2009-09-20 11:00:00"
+        },
+        "val": {
+          "strictly_increasing_target_ts": true,
+          "strictly_increasing_start_ts": true,
+          "first_window_start": "2009-09-20 12:00:00",
+          "last_target_ts": "2010-04-24 15:00:00"
+        },
+        "test": {
+          "strictly_increasing_target_ts": true,
+          "strictly_increasing_start_ts": true,
+          "first_window_start": "2010-04-24 16:00:00",
+          "last_target_ts": "2010-11-26 20:00:00"
+        }
+      }
+    },
+    "no_data_leakage": {
+      "passed": true,
+      "scaler_fit_sample_count": 24073,
+      "expected_train_valid_hours": 24073,
+      "scaler_min_max_exact_match_train": true,
+      "target_and_feature_scaler_idx0_identical": true,
+      "interpolation_strictly_interior_to_split": true,
+      "val_interpolated_count": 0,
+      "test_interpolated_count": 0
+    },
+    "consistent_input_dimensions": {
+      "passed": true,
+      "details": {
+        "train": {
+          "shape": [
+            23713,
+            60,
+            13
+          ],
+          "dtype": "float32",
+          "continuous_scaled_min": 0.0,
+          "continuous_scaled_max": 1.0,
+          "cyclical_bounds_ok": true,
+          "weekend_binary_ok": true
+        },
+        "val": {
+          "shape": [
+            4922,
+            60,
+            13
+          ],
+          "dtype": "float32",
+          "continuous_scaled_min": -0.010753,
+          "continuous_scaled_max": 0.99511,
+          "cyclical_bounds_ok": true,
+          "weekend_binary_ok": true
+        },
+        "test": {
+          "shape": [
+            4801,
+            60,
+            13
+          ],
+          "dtype": "float32",
+          "continuous_scaled_min": -0.002743,
+          "continuous_scaled_max": 1.05379,
+          "cyclical_bounds_ok": true,
+          "weekend_binary_ok": true
+        }
+      }
+    },
+    "correct_target_dimensions_and_inverse_kw": {
+      "passed": true,
+      "details": {
+        "train": {
+          "y_scaled_shape": [
+            23713,
+            1
+          ],
+          "y_raw_kw_shape": [
+            23713,
+            1
+          ],
+          "y_scaled_min": 0.0,
+          "y_scaled_max": 1.0,
+          "y_raw_kw_min": 0.124,
+          "y_raw_kw_max": 6.5605,
+          "max_inverse_transform_abs_err_kw": 4.76837158203125e-07
+        },
+        "val": {
+          "y_scaled_shape": [
+            4922,
+            1
+          ],
+          "y_raw_kw_shape": [
+            4922,
+            1
+          ],
+          "y_scaled_min": 0.011124,
+          "y_scaled_max": 0.798805,
+          "y_raw_kw_min": 0.1956,
+          "y_raw_kw_max": 5.2655,
+          "max_inverse_transform_abs_err_kw": 4.76837158203125e-07
+        },
+        "test": {
+          "y_scaled_shape": [
+            4801,
+            1
+          ],
+          "y_raw_kw_shape": [
+            4801,
+            1
+          ],
+          "y_scaled_min": 0.011046,
+          "y_scaled_max": 0.854937,
+          "y_raw_kw_min": 0.1951,
+          "y_raw_kw_max": 5.6268,
+          "max_inverse_transform_abs_err_kw": 4.76837158203125e-07
+        }
+      }
+    },
+    "raw_file_untouched": {
+      "passed": true,
+      "sha256": "4259c9d7ece5dbee9ab8d53682baac68d791c864f0f64a52b4043cb3b90894b7"
+    },
+    "all_passed": true
+  },
+  "saved_artifacts": {
+    "hourly_dataset_csv": "data/processed/hourly_dataset.csv",
+    "sequences_train_npz": "data/processed/sequences_train.npz",
+    "sequences_val_npz": "data/processed/sequences_val.npz",
+    "sequences_test_npz": "data/processed/sequences_test.npz",
+    "feature_scaler_joblib": "data/processed/scalers/feature_scaler.joblib",
+    "target_scaler_joblib": "data/processed/scalers/target_scaler.joblib",
+    "figures": [
+      "reports/figures/07_preprocessing_hourly_splits_and_gaps.png",
+      "reports/figures/08_preprocessing_1min_vs_hourly_comparison.png",
+      "reports/figures/09_preprocessing_scaling_and_sequences.png"
+    ]
+  }
+}

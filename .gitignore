@@ -1,81 +1,111 @@
-
-# ==============================
-# Python
-# ==============================
+# ==========================================
+# Python & Build Artifacts
+# ==========================================
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
-# ==============================
-# Virtual Environment
-# ==============================
+# ==========================================
+# Virtual Environments
+# ==========================================
 .venv/
 venv/
 env/
 ENV/
 
-# ==============================
-# Jupyter Notebook
-# ==============================
+# ==========================================
+# Jupyter & IPython
+# ==========================================
 .ipynb_checkpoints/
 .ipython/
 
-# ==============================
-# IDE & Editor
-# ==============================
+# ==========================================
+# IDE, Editor & Office Temp Files
+# ==========================================
 .vscode/
 .idea/
 *.swp
 *.swo
+*.tmp
+*.bak
+~$*.docx
+~$*.xlsx
+~$*.pptx
 
-# ==============================
-# Environment & Secrets
-# ==============================
+# ==========================================
+# Environment Variables & Credentials
+# ==========================================
 .env
 .env.*
 !.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*secret*.json
+*credential*.json
+secrets/
 
-# ==============================
-# Logs
-# ==============================
+# ==========================================
+# Logs & Experiment Trackers
+# ==========================================
 *.log
 logs/
-
-# ==============================
-# Dataset
-# ==============================
-data/raw/*
-!data/raw/.gitkeep
-
-# ==============================
-# Generated Processed Data
-# ==============================
-data/processed/*
-!data/processed/.gitkeep
-
-# ==============================
-# Model Artifacts
-# ==============================
-models/*
-!models/.gitkeep
-*.keras
-*.h5
-*.pb
-saved_model/
-
-# ==============================
-# Training Outputs
-# ==============================
 outputs/
 checkpoints/
 tensorboard/
 runs/
+mlruns/
+wandb/
 
-# ==============================
-# OS
-# ==============================
+# ==========================================
+# Raw Dataset (>100 MB; unduh dari UCI / Drive)
+# ==========================================
+data/raw/*
+!data/raw/.gitkeep
+
+# ==========================================
+# Processed Data (simpan metadata & scalers saja)
+# ==========================================
+data/processed/*
+!data/processed/.gitkeep
+!data/processed/preprocessing_metadata.json
+!data/processed/scalers/
+data/processed/scalers/*
+!data/processed/scalers/.gitkeep
+!data/processed/scalers/feature_scaler.joblib
+!data/processed/scalers/target_scaler.joblib
+
+# ==========================================
+# Model Artifacts (simpan model utama & summary)
+# Aturan wildcard *.keras harus berada SEBELUM pengecualian!
+# ==========================================
+*.keras
+*.h5
+*.pb
+saved_model/
+models/*
+!models/.gitkeep
+!models/model_summary.txt
+!models/stacked_lstm_best.keras
+
+# ==========================================
+# Reports Temporary Files (folder reports/ tetap di-track)
+# ==========================================
+reports/tmp/
+reports/*.tmp
+
+# ==========================================
+# Operating System Files
+# ==========================================
 .DS_Store
 Thumbs.db
 desktop.ini
